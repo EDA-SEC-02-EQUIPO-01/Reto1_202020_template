@@ -66,7 +66,7 @@ def compareRecordIds (recordA, recordB):
 
 
 def loadCSVFile (file, cmpfunction):
-    lst=lt.newList("SINGLE_LINKED", cmpfunction)
+    lst=lt.newList("ARRAY_LIST", cmpfunction)
     dialect = csv.excel()
     dialect.delimiter=";"
     try:
@@ -179,8 +179,79 @@ def conocer_un_director(lst,lst2, director,etiqueta="director_name",criterio_cal
                 lt.addLast(coleccion,pelicula_convertida)
                 print(lt.lastElement(coleccion)['title'])
         promedio=promediar(coleccion,criterio_calificacion)
+        t1_stop=process_time()  
+        print(f"tiempo de ejecucion: {t1_stop-t1_start} segundos")
         print(f"Peliculas totales:{lt.size(coleccion)}\nCalificacion promedio:{promedio}")
         
+def GetMoviesByActor (lstactors,actorname,lstmovies):
+    if lstactors["size"] == 0:
+        print ("La lista está vacía")
+        return 0
+    else:
+        movies=lt.newList("ARRAY_LIST")
+        col={}
+        itcast = it.newIterator(lstactors)
+        while it.hasNext(itcast):
+            counter=it.next(itcast)
+            if counter["actor1_name"].lower() == actorname.lower():
+                ids=counter["id"]
+                itmovies=it.newIterator(lstmovies)
+                movie= conversor_entre_cvs(ids,itmovies)
+                lt.addLast(movies,movie)
+                print(lt.lastElement(movies)["original_title"])
+                dire=counter["director_name"]
+                if dire in col:
+                    col[dire]+=1
+                else:
+                    col[dire]=1
+            if counter["actor2_name"].lower() == actorname.lower():
+                ids=counter["id"]
+                itmovies=it.newIterator(lstmovies)
+                movie= conversor_entre_cvs(ids,itmovies)
+                lt.addLast(movies,movie)
+                print(lt.lastElement(movies)["original_title"])
+                dire=counter["director_name"]
+                if dire in col:
+                    col[dire]+=1
+                else:
+                    col[dire]=1
+            if counter["actor3_name"].lower() == actorname.lower():
+                ids=counter["id"]
+                itmovies=it.newIterator(lstmovies)
+                movie= conversor_entre_cvs(ids,itmovies)
+                lt.addLast(movies,movie)
+                print(lt.lastElement(movies)["original_title"])
+                dire=counter["director_name"]
+                if dire in col:
+                    col[dire]+=1
+                else:
+                    col[dire]=1
+            if counter["actor4_name"].lower() == actorname.lower():
+                ids=counter["id"]
+                itmovies=it.newIterator(lstmovies)
+                movie= conversor_entre_cvs(ids,itmovies)
+                lt.addLast(movies,movie)
+                print(lt.lastElement(movies)["original_title"])
+                dire=counter["director_name"]
+                if dire in col:
+                    col[dire]+=1
+                else:
+                    col[dire]=1
+            if counter["actor5_name"].lower() == actorname.lower():
+                ids=counter["id"]
+                itmovies=it.newIterator(lstmovies)
+                movie= conversor_entre_cvs(ids,itmovies)
+                lt.addLast(movies,movie)
+                print(lt.lastElement(movies)["original_title"])
+                dire=counter["director_name"]
+                if dire in col:
+                    col[dire]+=1
+                else:
+                    col[dire]=1
+    promedio= promediar(movies,"vote_average")
+    ordenado= sorted(col.items(),key=lambda x:x[1], reverse=True)
+    print (f"peliculas totales: {lt.size(movies)}\nCalificación promedio: {promedio}\nDirector con más colaboraciones: {ordenado[0][0]}")
+
 def conocer_un_genero(lst,director,seguro=False):
     if lst['size']==0:
         print("La lista esta vacía")  
@@ -196,6 +267,9 @@ def conocer_un_genero(lst,director,seguro=False):
                 if not seguro:
                     print(lt.lastElement(coleccion)['title'])
         promedio=promediar(coleccion,"vote_count")
+        t1_stop=process_time()
+        
+        print(f"tiempo de ejecucion: {t1_stop-t1_start} segundos")
         print(f"Peliculas totales:{lt.size(coleccion)}\nCalificacion promedio:{promedio}")
     return coleccion
 
@@ -217,6 +291,8 @@ def ranking_de_genero(lst,genero,criterio,ordenamiento,num):
                 print(f"{num} WORST COUNTS MOVIES!!\n{lista_ordenada_genero}")
             elif ordenamiento==1:
                 print(f"{num} WORST AVERAGE MOVIES!!\n{lista_ordenada_genero}")
+    t1_stop=process_time()
+    print(f"tiempo de ejecucion: {t1_stop-t1_start} segundos")
 
 
 def main():
@@ -246,7 +322,8 @@ def main():
                 conocer_un_director(lstcasting,lstmovies,director)
 
             elif int(inputs[0])==4: #opcion 4
-                pass
+                actorname= input("Ingrese el actor que desea conocer: ")
+                GetMoviesByActor(lstcasting,actorname,lstmovies)
 
             elif int(inputs[0])==5: #opcion 5
                 genero=input("Ingrese el genero que desea entender\n")
